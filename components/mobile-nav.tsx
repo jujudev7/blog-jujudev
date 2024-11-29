@@ -30,22 +30,29 @@ export function MobileNav() {
           <span className="font-bold">{siteConfig.name}</span>
         </MobileLink>
         <div className="flex flex-col gap-3 mt-3">
-          <MobileLink onOpenChange={setOpen} href="/blog">
+          {/* <MobileLink onOpenChange={setOpen} href="/blog">
             Blog
-          </MobileLink>
+          </MobileLink> */}
           <MobileLink onOpenChange={setOpen} href="/about">
-            About
+            À Propos
           </MobileLink>
+          <Link
+            target="_blank"
+            rel="noreferrer"
+            href={siteConfig.links.personalSite}
+          >
+            Site Web
+          </Link>
           <Link target="_blank" rel="noreferrer" href={siteConfig.links.github}>
             GitHub
           </Link>
-          <Link
+          {/* <Link
             target="_blank"
             rel="noreferrer"
             href={siteConfig.links.twitter}
           >
-            Twitter
-          </Link>
+            X / Twitter
+          </Link> */}
         </div>
       </SheetContent>
     </Sheet>

@@ -1,61 +1,83 @@
+"use client";
+
 import { posts } from "#site/content";
 import { PostItem } from "@/components/post-item";
-import { buttonVariants } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
-import { cn, sortPosts } from "@/lib/utils";
-import Link from "next/link";
+import { QueryPagination } from "@/components/query-pagination";
+import { sortPosts } from "@/lib/utils";
+import { useEffect, useState } from "react";
+
+interface Post {
+  slug: string;
+  date: string;
+  title: string;
+  description: string;
+}
+
+const POST_PER_PAGE = 5;
 
 export default function Home() {
-  const latestPosts = sortPosts(posts).slice(0, 5);
+  const sortedPosts = sortPosts(posts.filter((post) => post.published));
+  const totalPages = Math.ceil(sortedPosts.length / POST_PER_PAGE);
+
   return (
     <>
-      <section className="space-y-6 pb-8 pt-6 md:pb-12 md:mt-10 lg:py-32">
-        <div className="container flex flex-col gap-4 text-center">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-balance">
-            Hello, I&apos;m Julien !
+      <section className="space-y-6 py-12">
+        <div className="container mx-auto flex flex-col gap-4 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-balance">
+            Hello, c&apos;est Julien !
           </h1>
-          <p className="max-w-[42rem] mx-auto text-muted-foreground sm:text-xl text-balance">
-            Welcome to my blog template. Built using Tailwind, Shadcn, Velite
-            and Nextjs 14.
+          <p className="max-w-[42rem] mx-auto text-muted-foreground text-lg text-balance">
+            Bienvenue sur mon Blog, développé avec Next.js, TypeScript, Tailwind
+            CSS, Shadcn et Velite.
           </p>
-          <div className="flex flex-col gap-4 justify-center sm:flex-row">
-            <Link
-              href="/blog"
-              className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-fit")}
-            >
-              View my Blog
-            </Link>
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "w-full sm:w-fit"
-              )}
-            >
-              GitHub
-            </Link>
-          </div>
         </div>
       </section>
-      <section className="container mx-auto max-w-4xl py-6 lg:py-10 flex flex-col space-y-6 mt-60">
-        <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-center">
-          Latest Posts
+      <section className="container mx-auto max-w-4xl py-6 lg:py-10 flex flex-col space-y-6">
+        <h2 className="text-indigo-600 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-6">
+          Les Derniers Articles
         </h2>
-        <ul className="flex flex-col">
-          {latestPosts.map((post) => (
-            <li key={post.slug} className="first:border-t first:border-border">
-              <PostItem
-                slug={post.slug}
-                title={post.title}
-                description={post.description}
-                date={post.date}
-              />
-            </li>
-          ))}
-        </ul>
+        <PostList posts={sortedPosts} postPerPage={POST_PER_PAGE} />
+        <QueryPagination totalPages={totalPages} className="mt-4" />
       </section>
     </>
   );
 }
+
+function PostList({
+  posts,
+  postPerPage,
+}: {
+  posts: Post[];
+  postPerPage: number;
+}) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const page = Number(params.get("page")) || 1;
+    setCurrentPage(page);
+  }, []);
+
+  const displayPosts = posts.slice(
+    postPerPage * (currentPage - 1),
+    postPerPage * currentPage
+  );
+
+  return displayPosts.length > 0 ? (
+    <ul className="flex flex-col">
+      {displayPosts.map((post) => (
+        <li key={post.slug}>
+          <PostItem
+            slug={post.slug}
+            date={post.date}
+            title={post.title}
+            description={post.description}
+          />
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>Il n&apos;y a pas encore d&apos;article.</p>
+  );
+}
+

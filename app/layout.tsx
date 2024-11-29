@@ -1,6 +1,6 @@
-import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { ThemeProvider } from "@/components/theme-provider";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { Metadata, Viewport } from "next";
@@ -28,21 +28,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-pt-[3.5em]">
+    <html
+      lang="fr"
+      className={cn("scroll-pt-[3.5em]", "light")}
+      suppressHydrationWarning
+    >
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          inter.variable
+          inter.variable,
+          "light"
         )}
       >
-        <Providers>
+        <ThemeProvider>
           <div className="px-4 relative flex min-h-dvh flex-col bg-background">
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />
           </div>
-        </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+

@@ -37,3 +37,6 @@ next-env.d.ts
 
 # velite files
 .velite
+
+# to-do list
+TODO.md

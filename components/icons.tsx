@@ -17,6 +17,34 @@ export const Icons = {
       <circle cx="5" cy="19" r="1" />
     </svg>
   ),
+  website: (props: IconProps) => (
+    <svg
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      stroke="#000"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path class="cls-2" d="M18.54,14.5a7,7,0,0,1-13.08,0" />
+      <path class="cls-2" d="M5.46,9.5a7,7,0,0,1,13.08,0" />
+      <line class="cls-2" x1="5.46" x2="18.54" y1="9.5" y2="9.5" />
+      <line class="cls-2" x1="5.46" x2="18.54" y1="14.5" y2="14.5" />
+      <polyline class="cls-2" points="4 11 5 13 6 11 7 13 8 11" />
+      <polyline class="cls-2" points="10 11 11 13 12 11 13 13 14 11" />
+      <polyline class="cls-2" points="16 11 17 13 18 11 19 13 20 11" />
+      <path
+        class="cls-2"
+        d="M14.68,9.5A9.21,9.21,0,0,0,12,5,9.18,9.18,0,0,0,9.33,9.47"
+      />
+      <path
+        class="cls-2"
+        d="M9.32,14.5A9.21,9.21,0,0,0,12,19a9.21,9.21,0,0,0,2.68-4.5"
+      />
+    </svg>
+  ),
   twitter: (props: IconProps) => (
     <svg
       {...props}
