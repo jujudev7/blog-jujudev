@@ -33,6 +33,10 @@ export default async function AboutPage() {
           <p className="text-muted-foreground text-lg py-4">
             Ancien journaliste sportif reconverti dans le développement web, je
             suis spécialisé en React.js, Next.js, TypeScript et Tailwind CSS.
+            Développeur Front-end, je me rapproche chaque jour un peu plus du
+            développeur Full-stack.
+          </p>
+          <p className="text-muted-foreground text-lg py-4">
             Grâce à mes compétences, je vous aide à concevoir des interfaces
             utilisateurs modernes et responsive.{" "}
           </p>
