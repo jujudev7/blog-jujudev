@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     const heading =
       title.length > 140 ? `${title.substring(0, 140)}...` : title;
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div tw="flex relative flex-col p-12 w-full h-full items-start text-black bg-white">
           <div tw="flex items-center">
@@ -68,6 +68,14 @@ export async function GET(req: NextRequest) {
         ],
       }
     );
+
+    // Ajout des headers CORS ici
+    return new Response(imageResponse.body, {
+      headers: {
+        "Access-Control-Allow-Origin": "*", // Autorise les requêtes provenant de n'importe quel domaine
+        "Content-Type": "image/png", // Type de contenu de l'image
+      },
+    });
   } catch (error) {
     return new Response("Failed to generate image", { status: 500 });
   }
