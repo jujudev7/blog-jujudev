@@ -1,0 +1,108 @@
+---
+title: Le MDX, c'est quoi ?
+description: En gros, le MDX, c'est du Markdown survitaminé ! 🚀
+date: 2024-12-02
+published: true
+---
+
+# Qu'est-ce que le MDX ?
+
+Le **MDX**, c'est la fusion entre le Markdown et le JSX. 🔥
+![](https://media1.tenor.com/m/cq6PaHOrRpwAAAAd/dragon-ball-z-fusion.gif)
+
+Le **markdown** vous connaissez déjà. Si, si ! Vous l'utilisez sans doute parfois sans même vous en rendre compte dans vos projets GitHub, GitLab ou autres, avec le fameux fichier _README\.md_.
+
+Inventé en 2004 par **John Gruber** (featuring Aaron Swartz), le markdown est un langage de balisage léger qui a pour objectif d'offrir une syntaxe facile à lire et à écrire.
+
+Ici, j'ai simplement entouré **MDX**, **markdown** et **John Gruber** avec 2 astérisques de chaque côté afin de les mettre en gras, comme ceci :
+
+```
+**MDX**
+**markdown**
+**John Gruber**
+```
+
+Pour mettre _README\.md_ en italique, je n'ai mis qu'une étoile de chaque côté :
+
+```
+*README\.md*
+```
+
+Vous noterez la présence d'un backslash ( **\\** ) avant le point (**.**) afin d'empêcher la création automatique d'un lien hypertexte.
+
+À noter que l'on peut remplacer les astérisques (**\***) par des underscores ( **\_** ). Exemple :
+
+```
+__MDX__
+_README\.md_
+```
+
+Donnent :  
+**MDX**  
+_README\.md_
+
+Quant au titre de cet article, il est simplement précédé d'un dièse/hashtag (**#**). Et on peut augmenter le nombre de dièses pour décliner la hiérarchie. Veillez toutefois à toujours ajouter un espace entre “**#**” et le texte. Comme cela :
+
+```
+# Titre principal
+## Titre secondaire
+### Titre de troisième niveau
+```
+
+# Titre principal
+
+## Titre secondaire
+
+### Titre de troisième niveau
+
+Pour + de balises markdown, je vous invite à lire **[ce guide 🔗](https://code-garage.fr/blog/le-guide-simplifie-sur-la-syntaxe-markdown)** concocté par **Code-Garage**.
+
+## <span className="text-indigo-600 font-bold">Découvrez la magie du MDX 🪄</span>
+
+Pour rappel, le **JSX** est une extension de la syntaxe du langage JavaScript qui permet de structurer le rendu des composants, notamment en injectant des balises HTML dans du JS.
+
+Voici un **composant React** (components/callout.tsx) afin de mettre en exergue des phrases en y ajoutant simplement une bordure et un background :
+
+```ts
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
+
+interface CalloutProps {
+  children?: ReactNode;
+  type?: "default" | "warning" | "danger" | "cool";
+}
+
+export function Callout({
+  children,
+  type = "default",
+  ...props
+}: CalloutProps) {
+  return (
+    <div
+      className={cn(
+        "my-6 items-start rounded-md border border-l-4 p-4 w-full dark:max-w-none",
+        {
+          "border-red-900 bg-red-50 dark:prose": type === "danger",
+          "border-yellow-900 bg-yellow-50 dark:prose": type === "warning",
+          "border-indigo-600 bg-indigo-50 dark:prose": type === "cool",
+        }
+      )}
+      {...props}
+    >
+      <div>{children}</div>
+    </div>
+  );
+}
+```
+
+On ajoute simplement le composant dans notre fichier **.mdx** :
+
+```
+<Callout type="cool">Ceci est un callout.</Callout>
+```
+
+Et hop, voilà le résultat en action !
+
+<Callout type="cool">Ceci est un callout.</Callout>
+
+Plutôt cool, non ?
