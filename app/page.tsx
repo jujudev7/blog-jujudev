@@ -4,13 +4,14 @@ import { posts } from "#site/content";
 import { PostItem } from "@/components/post-item";
 import { QueryPagination } from "@/components/query-pagination";
 import { sortPosts } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 interface Post {
   slug: string;
   date: string;
   title: string;
-  description: string;
+  description?: string;
+  published?: boolean;
 }
 
 const POST_PER_PAGE = 5;
@@ -37,7 +38,9 @@ export default function Home() {
           Les Derniers Articles
         </h2>
         <PostList posts={sortedPosts} postPerPage={POST_PER_PAGE} />
-        <QueryPagination totalPages={totalPages} className="mt-4" />
+        <Suspense>
+          <QueryPagination totalPages={totalPages} className="mt-4" />
+        </Suspense>
       </section>
     </>
   );
@@ -54,7 +57,7 @@ function PostList({
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const page = Number(params.get("page")) || 1;
+    const page = Number(params.get("page") || 1);
     setCurrentPage(page);
   }, []);
 
