@@ -41,7 +41,9 @@ export async function generateMetadata({
       url: post.slug,
       images: [
         {
-          url: `https://blog-jujudev.vercel.app/api/og?${ogSearchParams.toString()}`,
+          url: `${
+            process.env.NEXT_PUBLIC_BASE_URL
+          }/api/og?${ogSearchParams.toString()}`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -53,7 +55,9 @@ export async function generateMetadata({
       title: post.title,
       description: post.description,
       images: [
-        `https://blog-jujudev.vercel.app/api/og?${ogSearchParams.toString()}`,
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/og?${ogSearchParams.toString()}`,
       ],
     },
   };
