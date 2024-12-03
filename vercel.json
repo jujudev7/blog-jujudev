@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/og",
+      "destination": "/app/api/og/route.tsx"
+    }
+  ]
+}
