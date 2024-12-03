@@ -5,12 +5,12 @@ import { NextRequest } from "next/server";
 export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://blog.julienpenna.com";
   try {
     // Charger la police Inter-Bold à partir du dossier public
     const interBold = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/assets/fonts/Inter-Bold.ttf`
+      `${baseUrl}/assets/fonts/Inter-Bold.ttf`
     ).then((res) => res.arrayBuffer());
 
     // Récupérer les paramètres de requête
@@ -20,9 +20,7 @@ export async function GET(req: NextRequest) {
     // Si aucun titre n'est fourni, utiliser une image par défaut
     if (!title) {
       const defaultImageResponse = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-        }/opengraph-image.jpg`
+        `${baseUrl}/opengraph-image.jpg`
       );
 
       if (defaultImageResponse.ok) {
@@ -49,9 +47,7 @@ export async function GET(req: NextRequest) {
         <div
           tw="flex relative flex-col p-12 w-full h-full items-start text-black"
           style={{
-            backgroundImage: `url(${
-              process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-            }/bg-og.jpg)`,
+            backgroundImage: `url(${baseUrl}/bg-og.jpg)`,
           }}
         >
           <div tw="flex items-center">
