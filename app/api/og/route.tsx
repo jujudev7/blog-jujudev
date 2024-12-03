@@ -4,36 +4,65 @@ import { NextRequest } from "next/server";
 
 export const runtime = "edge";
 
-const interBold = fetch(
-  new URL("../../../assets/fonts/Inter-Bold.ttf", import.meta.url)
-).then((res) => res.arrayBuffer());
-
 export async function GET(req: NextRequest) {
   try {
-    const fontBold = await interBold;
+    // Charger la police Inter-Bold à partir du dossier public
+    const interBold = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+      }/assets/fonts/Inter-Bold.ttf`
+    ).then((res) => res.arrayBuffer());
 
+    // Récupérer les paramètres de requête
     const { searchParams } = req.nextUrl;
     const title = searchParams.get("title");
 
+    // Si aucun titre n'est fourni, utiliser une image par défaut
     if (!title) {
-      return new Response("No title provided", { status: 500 });
+      const defaultImageResponse = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+        }/opengraph-image.jpg`
+      );
+
+      if (defaultImageResponse.ok) {
+        return new Response(await defaultImageResponse.arrayBuffer(), {
+          headers: {
+            "Content-Type": "image/jpeg",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "public, max-age=31536000, immutable",
+          },
+        });
+      }
+
+      // Si l'image par défaut ne peut pas être chargée
+      return new Response("Default image could not be loaded", { status: 500 });
     }
 
+    // Générer un heading (tronqué si trop long)
     const heading =
       title.length > 140 ? `${title.substring(0, 140)}...` : title;
 
+    // Générer l'image OpenGraph
     const imageResponse = new ImageResponse(
       (
-        <div tw="flex relative flex-col p-12 w-full h-full items-start text-black bg-white">
+        <div
+          tw="flex relative flex-col p-12 w-full h-full items-start text-black"
+          style={{
+            backgroundImage: `url(${
+              process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+            }/bg-og.jpg)`,
+          }}
+        >
           <div tw="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path d="M4 11a9 9 0 0 1 9 9" />
               <path d="M4 4a16 16 0 0 1 16 16" />
@@ -41,9 +70,9 @@ export async function GET(req: NextRequest) {
             </svg>
             <p tw="ml-2 font-bold text-2xl">JujuBlog</p>
           </div>
-          <div tw="flex flex-col flex-1 py-10">
+          <div tw="flex flex-col flex-1 py-10 px-20 text-white">
             <div tw="flex text-xl uppercase font-bold tracking-tight font-normal">
-              BLOG POST
+              Article
             </div>
             <div tw="flex text-[80px] font-bold text-[50px]">{heading}</div>
           </div>
@@ -56,12 +85,12 @@ export async function GET(req: NextRequest) {
         </div>
       ),
       {
-        width: 1200,
-        height: 630,
+        width: 800,
+        height: 533,
         fonts: [
           {
             name: "Inter",
-            data: fontBold,
+            data: interBold,
             style: "normal",
             weight: 700,
           },
@@ -69,14 +98,18 @@ export async function GET(req: NextRequest) {
       }
     );
 
-    // Ajout des headers CORS ici
+    // Retourner la réponse avec les headers appropriés
     return new Response(imageResponse.body, {
       headers: {
-        "Access-Control-Allow-Origin": "*", // Autorise les requêtes provenant de n'importe quel domaine
-        "Content-Type": "image/png", // Type de contenu de l'image
+        "Content-Type": "image/png",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=31536000, immutable",
       },
     });
   } catch (error) {
-    return new Response("Failed to generate image", { status: 500 });
+    console.error("Error generating OG image:", error);
+
+    // Si une erreur survient, renvoyer un message d'erreur
+    return new Response("Failed to generate OG image", { status: 500 });
   }
 }
