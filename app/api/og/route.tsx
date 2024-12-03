@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://blog.julienpenna.com";
+    process.env.NEXT_PUBLIC_APP_URL || "https://api-og-blog-jujudev.vercel.app";
   try {
     // Charger la police Inter-Bold à partir du dossier public
     const interBold = await fetch(
