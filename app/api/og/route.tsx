@@ -1,49 +1,36 @@
+/* eslint-disable @next/next/no-img-element */
 import { siteConfig } from "@/config/site";
 import { ImageResponse } from "next/og";
-import { NextRequest } from "next/server";
 
-// export const runtime = "edge";
-export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
-export async function GET(req: NextRequest) {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://api-og-blog-jujudev.vercel.app";
+export async function GET(request: Request) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
   try {
-    // Charger la police Inter-Bold à partir du dossier public
-    const interBold = await fetch(
-      `${baseUrl}/assets/fonts/Inter-Bold.ttf`
-    ).then((res) => res.arrayBuffer());
+    const { searchParams } = new URL(request.url);
 
-    // Récupérer les paramètres de requête
-    const { searchParams } = req.nextUrl;
-    const title = searchParams.get("title");
+    // Paramètre title
+    const hasTitle = searchParams.has("title");
+    const title = hasTitle
+      ? searchParams.get("title")?.slice(0, 100)
+      : "JujuBlog";
 
-    // Si aucun titre n'est fourni, utiliser une image par défaut
-    if (!title) {
-      const defaultImageResponse = await fetch(
-        `${baseUrl}/opengraph-image.jpg`
-      );
-
-      if (defaultImageResponse.ok) {
-        return new Response(await defaultImageResponse.arrayBuffer(), {
-          headers: {
-            "Content-Type": "image/jpeg",
-            "Access-Control-Allow-Origin": "*",
-            "Cache-Control": "public, max-age=31536000, immutable",
-          },
-        });
-      }
-
-      // Si l'image par défaut ne peut pas être chargée
-      return new Response("Default image could not be loaded", { status: 500 });
+    // Charger la police
+    const fontResponse = await fetch(`${baseUrl}/assets/fonts/Inter-Bold.ttf`);
+    if (!fontResponse.ok) {
+      throw new Error("Failed to load font");
     }
+    const fontData = await fontResponse.arrayBuffer();
 
-    // Générer un heading (tronqué si trop long)
-    const heading =
-      title.length > 140 ? `${title.substring(0, 140)}...` : title;
+    // Charger l'image
+    const imageResponse = await fetch(`${baseUrl}/avatar.png`);
+    if (!imageResponse.ok) {
+      throw new Error("Failed to load image");
+    }
+    // const imageData = await imageResponse.arrayBuffer();
 
-    // Générer l'image OpenGraph
-    const imageResponse = new ImageResponse(
+    return new ImageResponse(
       (
         <div
           tw="flex relative flex-col p-12 w-full h-full items-start text-black"
@@ -67,46 +54,41 @@ export async function GET(req: NextRequest) {
             </svg>
             <p tw="ml-2 font-bold text-2xl">JujuBlog</p>
           </div>
-          <div tw="flex flex-col flex-1 py-10 px-20 text-white">
+          <div tw="flex flex-col justify-center flex-1 py-10 px-50 text-white">
             <div tw="flex text-xl uppercase font-bold tracking-tight font-normal">
               Article
             </div>
-            <div tw="flex text-[80px] font-bold text-[50px]">{heading}</div>
+            <div tw="flex text-[80px] font-bold text-[50px]">{title}</div>
           </div>
-          <div tw="flex items-center w-full justify-between">
+          <div tw="flex items-end w-full justify-between">
             <div tw="flex text-xl">{siteConfig.url}</div>
-            <div tw="flex items-center text-xl">
-              <div tw="flex ml-2">{siteConfig.links.github}</div>
+            <div tw="flex items-center flex-col text-xl overflow-hidden">
+              {/* <div tw="flex ml-2">{siteConfig.links.github}</div> */}
+
+              <img
+                tw="w-40 h-40 rounded-full scale-150 border border-2 border-white ml-2"
+                src={`${baseUrl}/avatar.png`}
+                alt="Julien Penna"
+              />
+              <span tw="text-lg mt-2 text-white">Julien Penna</span>
             </div>
           </div>
         </div>
       ),
       {
-        width: 800,
-        height: 533,
+        width: 1200,
+        height: 630,
         fonts: [
           {
             name: "Inter",
-            data: interBold,
+            data: fontData,
             style: "normal",
-            weight: 700,
           },
         ],
       }
     );
-
-    // Retourner la réponse avec les headers appropriés
-    return new Response(imageResponse.body, {
-      headers: {
-        "Content-Type": "image/png",
-        "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    });
   } catch (error) {
-    console.error("Error generating OG image:", error);
-
-    // Si une erreur survient, renvoyer un message d'erreur
+    console.error(error);
     return new Response("Failed to generate OG image", { status: 500 });
   }
 }

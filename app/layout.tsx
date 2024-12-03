@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 export const metadata: Metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? siteConfig.url),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_API_URL ?? siteConfig.url),
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,

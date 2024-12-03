@@ -42,7 +42,7 @@ export async function generateMetadata({
       images: [
         {
           url: `${
-            process.env.NEXT_PUBLIC_BASE_URL
+            process.env.NEXT_PUBLIC_API_URL
           }/api/og?${ogSearchParams.toString()}`,
           width: 1200,
           height: 630,
@@ -56,7 +56,7 @@ export async function generateMetadata({
       description: post.description,
       images: [
         `${
-          process.env.NEXT_PUBLIC_BASE_URL
+          process.env.NEXT_PUBLIC_API_URL
         }/api/og?${ogSearchParams.toString()}`,
       ],
     },
