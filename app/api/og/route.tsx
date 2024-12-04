@@ -2,7 +2,8 @@
 import { siteConfig } from "@/config/site";
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+// export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
