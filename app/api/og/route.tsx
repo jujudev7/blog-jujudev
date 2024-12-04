@@ -5,7 +5,7 @@ import { ImageResponse } from "next/og";
 export const runtime = "edge";
 
 export async function GET(request: Request) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
   try {
     const { searchParams } = new URL(request.url);
@@ -17,14 +17,14 @@ export async function GET(request: Request) {
       : "JujuBlog";
 
     // Charger la police
-    const fontResponse = await fetch(`${baseUrl}/assets/fonts/Inter-Bold.ttf`);
+    const fontResponse = await fetch("/assets/fonts/Inter-Bold.ttf");
     if (!fontResponse.ok) {
       throw new Error("Failed to load font");
     }
     const fontData = await fontResponse.arrayBuffer();
 
     // Charger l'image
-    const imageResponse = await fetch(`${baseUrl}/avatar.png`);
+    const imageResponse = await fetch("/avatar.png");
     if (!imageResponse.ok) {
       throw new Error("Failed to load image");
     }
