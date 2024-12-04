@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { siteConfig } from "@/config/site";
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
@@ -84,14 +85,41 @@ export async function GET(request: Request) {
             backgroundImage: `url(${baseUrl}/bg-og.jpg)`,
           }}
         >
-          {/* Reste de votre code inchangé */}
+          <div tw="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 11a9 9 0 0 1 9 9" />
+              <path d="M4 4a16 16 0 0 1 16 16" />
+              <circle cx="5" cy="19" r="1" />
+            </svg>
+            <p tw="ml-2 font-bold text-2xl">JujuBlog</p>
+          </div>
           <div tw="flex flex-col justify-center flex-1 py-10 px-50 text-white">
             <div tw="flex text-xl uppercase font-bold tracking-tight font-normal">
               Article
             </div>
             <div tw="flex text-[80px] font-bold text-[50px]">{title}</div>
           </div>
-          {/* ... */}
+          <div tw="flex items-end w-full justify-between">
+            <div tw="flex text-xl">{siteConfig.url}</div>
+            <div tw="flex items-center flex-col text-xl overflow-hidden">
+              {/* <div tw="flex ml-2">{siteConfig.links.github}</div> */}
+
+              <img
+                tw="w-40 h-40 rounded-full scale-150 border border-2 border-white ml-2"
+                src={`${baseUrl}/avatar.png`}
+                alt="Julien Penna"
+              />
+              <span tw="text-lg mt-2 text-white">Julien Penna</span>
+            </div>
+          </div>
         </div>
       ),
       {
