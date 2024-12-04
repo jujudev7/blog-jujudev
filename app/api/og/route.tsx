@@ -8,7 +8,13 @@ export async function GET(request: Request) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
   try {
+    console.log("Full request URL:", request.url);
+
     const { searchParams } = new URL(request.url);
+    console.log("Search Params:", Object.fromEntries(searchParams));
+
+    console.log("Font fetch URL:", `${baseUrl}/assets/fonts/Inter-Bold.ttf`);
+    console.log("Image fetch URL:", `${baseUrl}/avatar.png`);
 
     // Paramètre title
     const hasTitle = searchParams.has("title");
@@ -17,14 +23,14 @@ export async function GET(request: Request) {
       : "JujuBlog";
 
     // Charger la police
-    const fontResponse = await fetch("/assets/fonts/Inter-Bold.ttf");
+    const fontResponse = await fetch(`${baseUrl}/assets/fonts/Inter-Bold.ttf`);
     if (!fontResponse.ok) {
       throw new Error("Failed to load font");
     }
     const fontData = await fontResponse.arrayBuffer();
 
     // Charger l'image
-    const imageResponse = await fetch("/avatar.png");
+    const imageResponse = await fetch(`${baseUrl}/avatar.png`);
     if (!imageResponse.ok) {
       throw new Error("Failed to load image");
     }
@@ -88,7 +94,9 @@ export async function GET(request: Request) {
       }
     );
   } catch (error) {
-    console.error(error);
-    return new Response("Failed to generate OG image", { status: 500 });
+    console.error("OG Image Generation Error:", error);
+    return new Response(`Failed to generate OG image: ${error.message}`, {
+      status: 500,
+    });
   }
 }
